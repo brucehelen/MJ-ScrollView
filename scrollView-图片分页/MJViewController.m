@@ -10,9 +10,9 @@
 
 #define kImageCount 8
 
-@interface MJViewController ()
+@interface MJViewController () <UIScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-
+@property UIPageControl *pageControl;
 @end
 
 @implementation MJViewController
@@ -37,8 +37,23 @@
     _scrollView.contentSize = CGSizeMake(kImageCount*w, 0);
     _scrollView.showsHorizontalScrollIndicator = NO;
     _scrollView.pagingEnabled = YES;
+    _scrollView.delegate = self;
+    
+    UIPageControl *pageControl = [[UIPageControl alloc] init];
+    pageControl.numberOfPages = kImageCount;
+    pageControl.center = CGPointMake(w * 0.5, h - 20);
+    pageControl.bounds = CGRectMake(0, 0, 150, 50);
+    pageControl.pageIndicatorTintColor = [UIColor redColor];
+    pageControl.currentPageIndicatorTintColor = [UIColor greenColor];
+    
+    _pageControl = pageControl;
+    [self.view addSubview:pageControl];
 }
 
-
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    int page = scrollView.contentOffset.x / scrollView.frame.size.width;
+    _pageControl.currentPage = page;
+}
 
 @end
